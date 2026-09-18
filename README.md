@@ -44,7 +44,7 @@ a. if your MongoDB is not running in the background, you can start manually from
    mongod
 
 b. To interact with your database, Open a new terminal window and run
-   ``bash
+   ```bash
    mongosh
    
 5. Run the FastAPI server:
