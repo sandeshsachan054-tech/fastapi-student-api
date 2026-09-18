@@ -25,6 +25,7 @@ This is a simple REST API built using **FastAPI** and **MongoDB** to manage stud
    ```bash
    git clone [https://github.com/sandeshsachan054-tech/fastapi-student-api.git](https://github.com/sandeshsachan054-tech/fastapi-student-api.git)
    cd fastapi-student-api
+   ```
 
 2. Create and activate a virtual environment:
    ```bash
@@ -33,24 +34,28 @@ This is a simple REST API built using **FastAPI** and **MongoDB** to manage stud
    venv\Scripts\activate
    # For macOS/Linux:
    source venv/bin/activate
-
+   ```
+   
 3. Install the required dependencies:
    ```bash
     pip install fastapi uvicorn pymongo python-dotenv
-
+   ```
+   
 4. Running MongoDB via Terminal
 a. if your MongoDB is not running in the background, you can start manually from terminal
    ```bash
    mongod
+   ```
 
 b. To interact with your database, Open a new terminal window and run
    ```bash
    mongosh
-   
+   ```
 5. Run the FastAPI server:
    ```bash
    uvicorn main:app --reload
-
+   ```
+   
 Usage:
 
 ​Once the server is running, you can interact with the API using FastAPI's built-in Swagger UI.
