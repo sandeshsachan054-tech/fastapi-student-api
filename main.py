@@ -1,137 +1,36 @@
-from fastapi import FastAPI, Query, Path, HTTPException, status
-from pydantic import BaseModel, Field
-from database import students_collection
-from bson import ObjectId
-from typing import List
+from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 
-app = FastAPI()
+from routes.student_routes import router as student_router
+from errors.validation import validation_exception_handler
 
 
-class Student(BaseModel):
-    name: str = Field(min_length=2, max_length=50)
-    age: int = Field(ge=5, le=100)
-    course: str = Field(min_length=2, max_length=50)
+app = FastAPI(
+    title="Student Management API",
+    description="Student CRUD API",
+    version="1.0.0"
+)
 
 
-# CREATE SINGLE STUDENT
-@app.post("/students",status_code=status.HTTP_201_CREATED)
-def create_student(student: Student):
+# Validation Error Handler
 
-    result = students_collection.insert_one(student.model_dump())
-
-    return {
-        "id": str(result.inserted_id),
-        **student.model_dump()
-    }
-
-# CREATE MULTIPLE STUDENTS 
-@app.post("/students/bulk", status_code=status.HTTP_201_CREATED)
-def create_multiple_students(students: List[Student]):
-    students_data = [student.model_dump() for student in students]
-
-    result = students_collection.insert_many(students_data)
-
-    return {
-        "message": f"Successfully  { len(result.inserted_ids)} students add ho gya!",
-        "inserted_ids": [str(doc_id) for doc_id in result.inserted_ids]
-    }
+app.add_exception_handler(
+    RequestValidationError,
+    validation_exception_handler
+)
 
 
-# READ ALL STUDENTS
-@app.get("/students")
-def get_students(
-    limit: int = Query(..., ge=1, le=10)
-):
+# Student Routes
 
-    students = list(
-        students_collection.find().limit(limit)
-    )
-
-    for student in students:
-        student["_id"] = str(student["_id"])
-
-    return students
+app.include_router(
+    student_router
+)
 
 
-# READ ONE
-@app.get("/students/{student_id}")
-def get_student(
-    student_id: str = Path(...)
-):
-
-    if not ObjectId.is_valid(student_id):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid student ID"
-        )
-
-    student = students_collection.find_one(
-        {"_id": ObjectId(student_id)}
-    )
-
-    if student is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
-
-    student["_id"] = str(student["_id"])
-
-    return student
-
-
-# UPDATE
-@app.put("/students/{student_id}")
-def update_student(
-    student_id: str = Path(...),
-    student: Student = ...
-):
-
-    if not ObjectId.is_valid(student_id):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid student ID"
-        )
-
-    result = students_collection.update_one(
-        {"_id": ObjectId(student_id)},
-        {"$set": student.model_dump()}
-    )
-
-    if result.matched_count == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
+@app.get("/")
+def home():
 
     return {
-        "_id": student_id,
-        **student.model_dump()
-    }
-
-
-# DELETE
-@app.delete("/students/{student_id}")
-def delete_student(
-    student_id: str = Path(...)
-):
-
-    if not ObjectId.is_valid(student_id):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid student ID"
-        )
-
-    result = students_collection.delete_one(
-        {"_id": ObjectId(student_id)}
-    )
-
-    if result.deleted_count == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
-
-    return {
-        "message": "Student deleted"
+        "success": True,
+        "message": "Student Management API is running"
     }

@@ -1,75 +1,144 @@
 # FastAPI Student Management API
 
-This is a simple REST API built using **FastAPI** and **MongoDB** to manage student records. 
+A REST API built using **FastAPI** and **MongoDB** to manage student records with CRUD operations, validation, and student search by ID.
 
 ## Features
-- Create a new student record
-- Retrieve student details
-- Update existing student information
-- Delete a student record
+
+- Create a student
+- Create multiple students
+- Get all students
+- Search student by ID
+- Update student
+- Delete student
+- Input validation
+- MongoDB ObjectId validation
 
 ## Tech Stack
-- **Framework:** FastAPI
-- **Database:** MongoDB
-- **Database Driver:** PyMongo
-- **Server:** Uvicorn
-- **Language:** Python 3.x
 
-## Prerequisites
-- Python 3.8 or higher installed on your system.
-- MongoDB running locally on `mongodb://localhost:27017/` (or a MongoDB Atlas connection string).
+- Framework: FastAPI
+- Database:  MongoDB
+- Driver:    PyMongo
+- Server:    Uvicorn
+- Language:  Python 3.x ( required python3.8+ version)
+
+## Project Structure
+
+```text
+fastapi-student-api/
+├── main.py
+├── database.py
+├── controllers/
+│   └── student_controller.py
+├── models/
+│   └── student_model.py
+├── services/
+│   └── student_service.py
+├── repositories/
+│   └── student_repository.py
+└── routes/
+    └── student_routes.py
+```
+
 
 ## Installation & Setup
 
-1. **Clone the repository:**
+1. Clone Repository-
    ```bash
-   git clone [https://github.com/sandeshsachan054-tech/fastapi-student-api.git](https://github.com/sandeshsachan054-tech/fastapi-student-api.git)
+   git clone https://github.com/sandeshsachan054-tech/fastapi-student-api.git
    cd fastapi-student-api
    ```
 
-2. Create and activate a virtual environment:
+2. Create Virtual Environment-
+
    ```bash
    python -m venv venv
-   # For Windows:
-   venv\Scripts\activate
-   # For macOS/Linux:
-   source venv/bin/activate
    ```
-   
-3. Install the required dependencies:
+for windows-
+
    ```bash
-    pip install fastapi uvicorn pymongo python-dotenv
+    venv\Scripts\activate
    ```
-   
-4. Running MongoDB via Terminal
-a. if your MongoDB is not running in the background, you can start manually from terminal
+
+3. Install Dependencies:
+   ```bash
+   pip install fastapi uvicorn pymongo python-dotenv
+   ```
+
+4. Start MongoDB
    ```bash
    mongod
    ```
 
-b. To interact with your database, Open a new terminal window and run
-   ```bash
-   mongosh
-   ```
-5. Run the FastAPI server:
+5. Run API
    ```bash
    uvicorn main:app --reload
    ```
-   
-Usage:
 
-​Once the server is running, you can interact with the API using FastAPI's built-in Swagger UI.
+## API Documentation
 
-​a. Swagger UI: Open http://127.0.0.1:8000/docs in your browser to test the API endpoints directly.
+Swagger UI:
+http://127.0.0.1:8000/docs
 
-​b. Alternative (ReDoc): Open http://127.0.0.1:8000/redoc for standard API documentation.
+ReDoc:
+http://127.0.0.1:8000/redoc
 
-​Example Request (Create Student):
-​POST /students
+Click an endpoint and select:
+Try it out
 
-json
-{
-  "name": "ABC"
-  "age": 5,
-  "course": "B.Tech"
-}
+## Swagger will display:
+-Request URL
+-Request body
+-HTTP status code
+-Response body
+-Response headers
+
+
+## API Endpoints:
+
+| Method | Endpoint                 | Description              |
+| ------ | ------------------------ | ------------------------ |
+| POST   | `/students`              | Create student           |
+| POST   | `/students/bulk`         | Create multiple students |
+| GET    | `/students`              | Get all students         |
+| GET    | `/students/search`       | Search student by ID     |
+| GET    | `/students/{student_id}` | Get student by ID        |
+| PUT    | `/students/{student_id}` | Update student           |
+| DELETE | `/students/{student_id}` | Delete student           |
+
+
+## Request Flow Example:
+When a client creates a student:
+
+Client
+  │
+  │ POST /students
+  ▼
+Route
+  │
+  ▼
+Controller
+  │
+  ▼
+Service
+  │
+  ▼
+Repository
+  │
+  ▼
+MongoDB
+  │
+  ▼
+Repository Result
+  │
+  ▼
+Service
+  │
+  ▼
+Controller
+  │
+  ▼
+JSON Response
+
+
+## Github:
+https://github.com/sandeshsachan054-tech
