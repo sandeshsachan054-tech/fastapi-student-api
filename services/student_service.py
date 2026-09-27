@@ -44,7 +44,7 @@ def create_multiple_students(
 # GET ALL STUDENTS
 # =====================================================
 
-def get_all_students(limit: int):
+def get_all_students(limit: int = 10, offset: int = 0):
 
     students = student_repository.get_all_students(
         limit
@@ -53,7 +53,7 @@ def get_all_students(limit: int):
     for student in students:
         student["_id"] = str(student["_id"])
 
-    return students
+    return student_repository.get_all_students(limit=limit, skip=offset)
 
 
 # =====================================================

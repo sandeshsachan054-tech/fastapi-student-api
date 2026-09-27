@@ -32,13 +32,17 @@ def create_multiple_students(students_data: list):
 # GET ALL STUDENTS
 # =====================================================
 
-def get_all_students(limit: int):
+def get_all_students(limit: int=10, skip: int = 0):
 
     students = list(
         students_collection
         .find()
+        .skip(skip)
         .limit(limit)
     )
+    for student in students:
+        if "_id" in student:
+            student["_id"] = str(student["_id"])
 
     return students
 

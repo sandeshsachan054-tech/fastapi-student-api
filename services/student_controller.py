@@ -27,39 +27,45 @@ def create_student(student: Student):
 # CREATE MULTIPLE STUDENTS
 # =====================================================
 
-def create_multiple_students(students: List[Student]):
-    students_data = [student.model_dump() for student in students]
+def create_multiple_students(
+    students: List[Student]
+):
 
-    result = student_service.create_multiple_students(students_data)
-    inserted_count = len(result.get("inserted_ids", []))
+    students_data = [
+        student.model_dump()
+        for student in students
+    ]
+
+    result = student_service.create_multiple_students(
+        students_data
+    )
 
     return {
-        "status": "completed",
         "success": True,
-        "message": f"Successfully {inserted_count} students add ho gye",
-        "total_added": inserted_count,
-        "can_add_more": True,
-        "next_action" : {
-            "endpoint": "/students/bulk",
-            "method": "POST",
-            "description": "Aap agle students ki list isi bna skte ho"
-        },
-        
+        "message": (
+            f"Successfully "
+            f"{len(result['inserted_ids'])} "
+            f"students add ho gaye"
+        ),
+        **result
     }
 
-# =======================================================
+
+# =====================================================
 # GET ALL STUDENTS
-# =======================================================
-def get_all_students(limit: int = 10, offset: int = 0):
-    students = student_service.get_all_students(limit=limit, offset=offset)
-    
+# =====================================================
+
+def get_all_students(
+    limit: int
+):
+
+    students = student_service.get_all_students(
+        limit
+    )
+
     return {
-        "status": "completed",
         "success": True,
         "total": len(students),
-        "limit": limit,
-        "offset": offset,
-        "next_offset": offset + limit,
         "students": students
     }
 
